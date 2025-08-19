@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>7anonty ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      direction: rtl;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                  url('jpgedit.jpg') no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      color: #ffffff;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1s ease-in-out;
+      z-index: 1;
+      position: relative;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #00ffe7;
+      padding: 4px;
+      margin: 0 auto 25px auto;
+      box-shadow: 0 0 15px #00ffe7, 0 0 30px #00ffe7;
+      transition: 0.3s;
+    }
+
+    .profile-pic img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .number {
+      font-size: 4rem;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #00ffe7;
+      text-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7;
+    }
+
+    .label {
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-bottom: 25px;
+    }
+
+    .quote {
+      margin-top: 35px;
+      font-size: 1.3rem;
+      color: #ffd27d;
+      text-shadow: 0 0 5px #000;
+      padding: 0 10px;
+    }
+
+    .quote:hover {
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    /* مشغل الموسيقى */
+    .music-player {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .music-btn {
+      background: #00ffe7;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 0 15px #00ffe7;
+    }
+
+    .wave-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      margin-top: 15px;
+      height: 40px;
+    }
+
+    .wave {
+      width: 6px;
+      height: 10px;
+      margin: 0 3px;
+      background: #00ffe7;
+      border-radius: 3px;
+      animation: waveAnim 1s infinite ease-in-out;
+      animation-play-state: paused;
+    }
+
+    .wave:nth-child(2) { animation-delay: 0.2s; }
+    .wave:nth-child(3) { animation-delay: 0.4s; }
+    .wave:nth-child(4) { animation-delay: 0.6s; }
+    .wave:nth-child(5) { animation-delay: 0.8s; }
+
+    @keyframes waveAnim {
+      0%, 100% { height: 10px; }
+      50% { height: 35px; }
+    }
+
+    /* زر الرسالة */
+    .message-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #00ffe7;
+      color: #000;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      box-shadow: 0 0 15px #00ffe7;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    /* نموذج الرسالة */
+    .message-form {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 4;
+      display: none;
+    }
+
+    .form-box {
+      background: #111;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #00ffe7;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .form-box textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      resize: none;
+      margin-bottom: 15px;
+    }
+
+    .form-box button {
+      padding: 10px 25px;
+      background: #00ffe7;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* عداد الزيارات */
+    .visit-counter {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      color: #00ffe7;
+      font-size: 0.9rem;
+      text-shadow: 0 0 5px #00ffe7;
+      z-index: 3;
+    }
+
+    @media (max-width: 600px) {
+      .number {
+        font-size: 3rem;
+      }
+      .quote {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <div class="container">
+    <!-- صورة دائرية -->
+    <div class="profile-pic">
+      <img src="jpg2.jfif" alt="صورة شخصية">
+    </div>
+
+    <div class="number" id="daysPassed">0</div>
+    <div class="label">يوم</div>
+
+    <div class="number" id="secondsPassed">0</div>
+    <div class="label">ثانية</div>
+
+    <div class="quote" id="quote">✨ كل يوم هو بداية جديدة...</div>
+
+    <!-- مشغل الموسيقى -->
+    <div class="music-player">
+      <button class="music-btn" id="playBtn">▶</button>
+      <div class="wave-container" id="waveContainer">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+      </div>
+      <audio id="audio" src="youm.mp3"></audio>
+    </div>
+  </div>
+
+  <!-- زر الرسالة -->
+  <!-- <button class="message-btn" onclick="showForm()">سيبلي رسالة</button> -->
+
+  <!-- نموذج الرسالة -->
+  <div class="message-form" id="messageForm">
+    <div class="form-box">
+      <textarea id="userMessage" placeholder="اكتب رسالتك هنا..."></textarea>
+      <br>
+      <button onclick="sendMessage()">إرسال</button>
+    </div>
+  </div>
+
+  <!-- عداد الزيارات -->
+  <div class="visit-counter" id="visitCounter"></div>
+
+  <script>
+    // عداد الأيام والثواني
+    const birthDate = new Date("2023-07-05T00:00:00");
+
+    function updateCounter() {
+      const now = new Date();
+      const diffInMs = now - birthDate;
+      const days = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+      const seconds = Math.floor(diffInMs / 1000);
+      document.getElementById("daysPassed").innerText = days;
+      document.getElementById("secondsPassed").innerText = seconds;
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    // الاقتباسات اليومية
+    const quotes = [
+      "إنتي الحكاية اللي عمري ما همل منها يبطتي ❤️",
+      "You are My World 🌍",
+      "معاك الدنيا أحلى 💕",
+      "ضحكتك بتنور حياتي ✨",
+      "إنتي أمان قلبي وسعادته 🌹",
+      "كل لحظة معاك جنة 🕊️"
+    ];
+
+    function updateDailyQuote() {
+      const today = new Date().toDateString();
+      let savedData = JSON.parse(localStorage.getItem("dailyQuote"));
+
+      if (!savedData || savedData.date !== today) {
+        const index = Math.floor(Math.random() * quotes.length);
+        savedData = {
+          date: today,
+          quote: quotes[index]
+        };
+        localStorage.setItem("dailyQuote", JSON.stringify(savedData));
+      }
+
+      document.getElementById("quote").innerText = savedData.quote;
+
+      // حساب الوقت لحد نص الليل الجاي
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setHours(24, 0, 0, 0); // 00:00 اليوم الجاي
+      const timeToMidnight = tomorrow - now;
+
+      // جدولة التغيير عند نص الليل
+      setTimeout(updateDailyQuote, timeToMidnight);
+    }
+
+    updateDailyQuote();
+
+    // رسالة المستخدم
+    function showForm() {
+      document.getElementById("messageForm").style.display = "flex";
+    }
+
+    function sendMessage() {
+      const message = document.getElementById("userMessage").value;
+      if (message.trim() === "") return;
+      console.log("تم إرسال الرسالة: ", message);
+      alert("تم إرسال رسالتك ❤️");
+      document.getElementById("userMessage").value = "";
+      document.getElementById("messageForm").style.display = "none";
+    }
+
+    // عداد الزيارات (محلي)
+    let visits = localStorage.getItem("visits") || 0;
+    visits++;
+    localStorage.setItem("visits", visits);
+    document.getElementById("visitCounter").innerText = `عدد الزيارات: ${visits}`;
+
+    // النجوم بالـ canvas
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars = [];
+    for (let i = 0; i < 100; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5,
+        speed: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ffe7';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    drawStars();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // مشغل الموسيقى
+    const playBtn = document.getElementById('playBtn');
+    const audio = document.getElementById('audio');
+    const waves = document.querySelectorAll('.wave');
+
+    playBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play();
+        playBtn.innerText = '⏸';
+        waves.forEach(w => w.style.animationPlayState = 'running');
+      } else {
+        audio.pause();
+        playBtn.innerText = '▶';
+        waves.forEach(w => w.style.animationPlayState = 'paused');
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      playBtn.innerText = '▶';
+      waves.forEach(w => w.style.animationPlayState = 'paused');
+    });
+  </script>
+</body>
+</html>
